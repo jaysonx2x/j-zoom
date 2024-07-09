@@ -6,10 +6,12 @@ const Home = () => {
 
   const time = now.toLocaleTimeString('en-US', {
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
+    timeZone: 'Asia/Manila'
   });
   const date = (new Intl.DateTimeFormat('en-US', {
     dateStyle: 'full',
+    timeZone: 'Asia/Manila'
   })).format(now);
 
   return (
