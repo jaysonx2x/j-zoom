@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { CallControls, CallingState, CallParticipantsList, CallStatsButton, PaginatedGridLayout, SpeakerLayout, useCallStateHooks } from '@stream-io/video-react-sdk';
+import { CallControls, CallingState, CallParticipantsList, CallStatsButton, PaginatedGridLayout, SpeakerLayout, useCall, useCallStateHooks } from '@stream-io/video-react-sdk';
 import React, { useState } from 'react'
 import {
     DropdownMenu,
@@ -13,6 +13,9 @@ import { LayoutList, Users } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import EndCallButton from './EndCallButton';
 import Loader from './Loader';
+import { useToast } from './ui/use-toast';
+import { Button } from './ui/button';
+import Image from 'next/image';
   
 
 type CallLayoutType = 'grid' | 'speaker-left' | 'speaker-right';
@@ -26,6 +29,9 @@ const MeetingRoom = () => {
     const [showParticipants, setShowParticipants] = useState(false);
     const { useCallCallingState } = useCallStateHooks();
     const callingState = useCallCallingState();
+    const call = useCall();
+    const {toast} = useToast();
+    const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${call?.id}`
 
     const router = useRouter();
 
@@ -86,6 +92,16 @@ const MeetingRoom = () => {
                 </button>
 
                 { !isPersonalRoom && <EndCallButton /> }
+
+                <Button className='cursor-pointer rounded-2xl bg-[#19232d] px-4 py-2 hover:bg-[#4c535b]' onClick={() => {
+                    navigator.clipboard.writeText(meetingLink);
+                    toast({
+                        title: "Link Copied",
+                    });
+                    } } title='Copy Inviation Link'>
+                    <Image src='/icons/copy.svg' 
+                        width={20} height={20} alt='copy' />
+                </Button>
             </div>
 
         </section>
